@@ -1,0 +1,11 @@
+adapter: hf_local
+model_name: example-local-vlm
+snapshot_path: models/snapshots/example-local-vlm
+revision: ""
+snapshot_hash: replace-with-local-snapshot-hash-or-commit
+local_files_only: true
+trust_remote_code: false
+device_map: auto
+torch_dtype: auto
+max_new_tokens: 128
+do_sample: false

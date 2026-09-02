@@ -1,0 +1,84 @@
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+
+# Local workspace tooling and generated planning state
+_bmad/
+_bmad-output/
+planning_artifacts/
+
+# Local archives and downloaded assets
+open.zip
+*.zip
+*.tar.gz
+*.tar.gz.sha256
+
+# Official data and model weights
+
+data/raw/open/*
+!data/raw/open/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+models/snapshots/*
+!models/snapshots/.gitkeep
+
+# Large Shadow Validation payloads; keep manifests/reports/templates
+data/shadow-private/metadata-v1/raw/*
+data/shadow-private/image-pool-v1/images/*
+data/shadow-private/pending-v1/records.jsonl
+
+# Repeated inference outputs
+runs/*
+!runs/.gitkeep
+submissions/*
+!submissions/.gitkeep
+
+# Downloaded code-share bundles; keep only reviewed notes/cards in Git
+references/high-score/downloads/*
+references/high-score/vendor/*
+
+# Evaluation-derived row-level data and submission outputs
+experiments/analysis/analysis/
+experiments/analysis/disagreement_20260623/*.csv
+experiments/analysis/disagreement_20260623/*.json
+experiments/analysis/disagreement_20260623/risk_sets/*.csv
+experiments/analysis/disagreement_20260623/general_rule_review.md
+experiments/analysis/disagreement_20260623/manual_review_17_contact_sheet.jpg
+experiments/analysis/qwen_jsononly_transfers_20260623/**/*.csv
+experiments/analysis/qwen_jsononly_transfers_20260623/**/*.json
+experiments/analysis/qwen_jsononly_transfers_20260623/**/*.jsonl
+experiments/analysis/qwen_jsononly_transfers_20260623/**/*.log
+experiments/analysis/qwen_jsononly_transfers_20260623/**/raw_audit/
+experiments/analysis/qwen_jsononly_transfers_20260623/**/submissions/
+experiments/analysis/reasoner_submission_score_analysis_20260623/*.csv
+experiments/analysis/reasoner_submission_score_analysis_20260623/*.json
+experiments/analysis/submission_reports_20260623/
+
+# Shadow-validation source records and review UI; keep only reviewed manifests/reports
+data/shadow-private/candidate-pool-v1/candidates.jsonl
+data/shadow-private/image-pool-v1/images.jsonl
+data/shadow-private/image-pool-v1/rejections.jsonl
+data/shadow-private/pending-v1/review.html
+
+# Local submission/result collections and evaluation-derived copies
+runpod-result-backup-*/
+**/평가 분석/
+**/실제 제출/
+**/* 분석/
+평가 분석 복사본
+**/conversation-001-*-model-shadow-validation.md
+**/*reasoner_experiments.md
+
+# Detailed notes containing row-level evaluation identifiers
+experiments/investigations/investigations/
+HANDOFF_3_execution.md
+experiments/investigations/qwen-gemma-disagreement-investigation.md
+docs/history/stories/2-4-run-reasoner-inference-and-preserve-raw-outputs.md
+**/conversation-001-multimodal-bias-model-shadow-validation.md
+**/conversation_001_multimodal-bias_reasoner_experiments.md
+**/dialogue_001_reasoner_optimization.md
+**/* 분석 복사본

@@ -1,0 +1,29 @@
+# Multimodal 236722 GPU runtime for the MiniCPM-V-4_5 direct Transformers path.
+#
+# Target reference environment:
+#   Ubuntu 20.04, Python 3.10, CUDA 12.4, PyTorch 2.6.0, RTX A6000 48GB
+#
+# Install the CUDA PyTorch stack first from the official cu124 index:
+#   python -m pip install \
+#     torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 \
+#     --index-url https://download.pytorch.org/whl/cu124
+#
+# Then install this file:
+#   python -m pip install -r requirements-gpu-minicpm-cu124.txt
+#
+# Keep vLLM and flash-attn out of this environment unless a separate smoke test
+# proves they are needed. The current MiniCPM adapter uses Transformers directly.
+
+transformers==4.51.0
+accelerate==1.6.0
+tokenizers==0.21.1
+huggingface-hub==0.30.2
+safetensors==0.5.3
+
+numpy==1.26.4
+Pillow==11.2.1
+filelock==3.18.0
+packaging==24.2
+regex==2024.11.6
+requests==2.32.3
+tqdm==4.67.1

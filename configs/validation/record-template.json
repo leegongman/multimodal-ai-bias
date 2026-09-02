@@ -1,0 +1,19 @@
+{
+  "sample_id": "shadow_pending_0001",
+  "image_ref": "images/pending_0001.png",
+  "context": "Independently authored context.",
+  "question": "Independently authored question?",
+  "answers": ["Choice A", "Choice B", "Cannot be determined"],
+  "expected_label": 2,
+  "uncertainty_option_index": 2,
+  "expected_is_uncertainty": true,
+  "subsets": ["ambiguous"],
+  "provenance_type": "self_authored",
+  "source_uri_or_note": "Independent authoring note; no evaluation/test access used.",
+  "license_or_permission": "Author-owned and permitted for validation.",
+  "author_id": "replace-with-author-id",
+  "review_status": "pending",
+  "reviewer_id": null,
+  "split": "selection",
+  "randomization_seed": null
+}

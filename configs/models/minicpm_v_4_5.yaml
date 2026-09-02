@@ -1,0 +1,12 @@
+adapter: minicpm_v
+model_name: openbmb/MiniCPM-V-4_5
+snapshot_path: models/snapshots/MiniCPM-V-4_5
+revision: ""
+snapshot_hash: fd3209b2e0580e346fc33d2c6f85b6e9332eecda
+local_files_only: true
+trust_remote_code: true
+device_map: auto
+torch_dtype: bfloat16
+max_new_tokens: 128
+do_sample: false
+model_class: AutoModel

@@ -1,0 +1,83 @@
+# generated: 2026-06-20 12:24:40 KST
+# last_updated: 2026-06-21 22:42:11 KST
+# project: Multimodal 236722 Multimodal AI Bias Solution
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: docs/history/stories
+# HUMAN-OWNED EXECUTION LOCK:
+#   Only the Qwen2.5-VL-7B Reasoner v3 immediate resubmission path is active.
+#   Story 2.9, Story 2.10, and all of Epics 3, 4, and 5 are frozen for future use.
+#   Their `backlog` status means preserved/frozen, not authorized as the next work.
+#   Do not create, validate, implement, review, modify, or run them without explicit user unlock.
+#   See AGENTS.md.
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review
+#   - done: Story completed
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+generated: "2026-06-20 12:24:40 KST"
+last_updated: "2026-06-21 22:42:11 KST"
+project: "Multimodal 236722 Multimodal AI Bias Solution"
+project_key: "NOKEY"
+tracking_system: "file-system"
+story_location: "docs/history/stories"
+
+development_status:
+  epic-1: done
+  1-1-set-up-initial-project-from-starter-template: done
+  1-2-validate-official-multimodal-data-layout: done
+  1-3-parse-test-rows-into-typed-sample-records: done
+  1-4-load-images-with-per-sample-status: done
+  epic-1-retrospective: optional
+  epic-2: in-progress
+  2-1-configure-runtime-cli-and-run-artifact-contract: done
+  2-2-build-evidence-grounded-reasoner-prompts: done
+  2-3-implement-local-vlm-model-adapter: done
+  2-4-run-reasoner-inference-and-preserve-raw-outputs: done
+  2-5-parse-reasoner-outputs-into-structured-predictions: done
+  2-6-generate-validated-final-predictions-and-submission-csv: done
+  2-7-implement-reasoner-v3-option-index-contract: done
+  2-8-build-candidate-eligibility-and-adapter-smoke-harness: done
+  2-9-integrate-minicpm-v-4-5-candidate: backlog # FROZEN — explicit user unlock required
+  2-10-integrate-llava-onevision-7b-candidate: backlog # FROZEN — explicit user unlock required
+  epic-2-retrospective: optional
+  epic-3: backlog # FROZEN — explicit user unlock required
+  3-1-detect-verification-trigger-conditions: backlog
+  3-2-run-conditional-verifier-for-triggered-samples: backlog
+  3-3-arbitrate-final-labels-with-evidence-preservation: backlog
+  3-4-audit-verification-impact-and-failure-modes: backlog
+  epic-3-retrospective: optional
+  epic-4: backlog # FROZEN — explicit user unlock required
+  4-1-define-local-validation-dataset-schema-and-subsets: backlog
+  4-2-acquire-or-author-shadow-private-samples-and-provenance: backlog
+  4-3-independently-review-adjudicate-and-balance-samples: backlog # DEFERRED by user 2026-06-21; artifacts preserved
+  4-4-freeze-selection-and-sealed-holdout-version: backlog
+  4-5-compute-robust-validation-metrics: backlog
+  4-6-implement-frozen-tournament-harness-and-experiment-contract: backlog
+  4-7-run-diagnostic-48-and-reasoner-only-candidate-selection: backlog
+  4-8-integrate-conditional-internvl3-14b-performance-candidate: backlog
+  4-9-evaluate-conditional-qwen2-5-vl-32b-awq-candidate: backlog
+  4-10-run-sealed-shortlist-and-verifier-a-b: backlog
+  4-11-validate-shortlist-runtime-and-memory: backlog
+  4-12-compare-candidate-runs-without-public-only-optimization: backlog
+  4-13-select-candidate-and-record-promotion-rationale: backlog
+  epic-4-retrospective: optional
+  epic-5: backlog # FROZEN — explicit user unlock required
+  5-1-generate-candidate-compliance-manifest: backlog
+  5-2-audit-offline-reproducibility-inputs: backlog
+  5-3-validate-gpu-submission-readiness-and-notify-operator: backlog
+  5-4-prepare-second-round-artifact-checklist: backlog
+  5-5-produce-final-handoff-summary-for-implementation-and-review: backlog
+  epic-5-retrospective: optional

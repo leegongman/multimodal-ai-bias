@@ -1,0 +1,8 @@
+# Install in an isolated Python 3.10 environment. Qwen3.5 currently requires
+# the vLLM nightly channel documented by the official model card:
+# uv pip install vllm --torch-backend=auto --extra-index-url https://wheels.vllm.ai/nightly
+#
+# Exact resolved versions and the model revision are captured with each run.
+vllm
+PyYAML==6.0.3
+typer==0.21.0

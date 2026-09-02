@@ -1,0 +1,12 @@
+adapter: hf_local
+model_name: Qwen/Qwen3.5-9B
+snapshot_path: models/snapshots/Qwen3.5-9B
+revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+snapshot_hash: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+local_files_only: true
+trust_remote_code: false
+device_map: auto
+torch_dtype: bfloat16
+max_new_tokens: 256
+do_sample: false
+model_class: AutoModelForMultimodalLM

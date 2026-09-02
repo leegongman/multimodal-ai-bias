@@ -1,0 +1,1 @@
+"""Competition compliance boundary."""

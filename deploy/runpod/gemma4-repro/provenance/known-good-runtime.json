@@ -1,0 +1,44 @@
+{
+  "captured_at": "2026-06-20T14:18:28.794628+00:00",
+  "host": {
+    "os": "Ubuntu 24.04.3 LTS",
+    "gpu": "NVIDIA RTX A6000",
+    "gpu_memory_mib": 49140,
+    "driver": "550.127.08",
+    "python": "3.12"
+  },
+  "model": {
+    "id": "google/gemma-4-12B-it",
+    "revision": "5926caa4ec0cac5cbfadaf4077420520de1d5205",
+    "architecture": "Gemma4UnifiedForConditionalGeneration"
+  },
+  "server": {
+    "vllm": "0.23.0+cu129",
+    "torch": "2.11.0+cu129",
+    "torch_cuda": "12.9",
+    "transformers": "5.12.1",
+    "fastapi": "0.116.1",
+    "starlette": "0.47.3",
+    "prometheus_fastapi_instrumentator": "7.1.0",
+    "host": "127.0.0.1",
+    "port": 8000,
+    "tensor_parallel_size": 1,
+    "max_model_len": 32768,
+    "gpu_memory_utilization": 0.9
+  },
+  "full_run": {
+    "run_id": "gemma4_12b_v3_full_c32_02",
+    "elapsed_seconds": 3338.5815350934863,
+    "sample_count": 8500,
+    "parse_valid_count": 8500,
+    "parse_invalid_count": 0,
+    "retry_count": 0,
+    "concurrency": 32,
+    "initial_max_tokens": 256,
+    "retry_max_tokens": 512,
+    "prompt_sha256": "87d694d0b968ccef4606a979f52c5de63454e870be71a6d9f4e91ef942067cb6",
+    "predictions_sha256": "73c139fc304f63211910d8d024734f6dc83d0ccda344d1fb1c9baf010cdfc84e",
+    "public_score": 0.9490833333
+  }
+}
+

@@ -1,0 +1,12 @@
+{
+  "sample_id": "shadow_pending_0001",
+  "adjudicator_id": "replace-with-independent-adjudicator-id",
+  "decision": "adjudicated|rejected",
+  "final_label": 2,
+  "final_subsets": ["ambiguous"],
+  "evidence_basis": "insufficient_evidence|stated_text_fact|objective_visual_evidence|valid_elimination",
+  "evidence_note": "Evidence supporting the final adjudication.",
+  "natural_language_ok": true,
+  "protected_attribute_shortcut_absent": true,
+  "content_safety_ok": true
+}

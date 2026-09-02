@@ -1,0 +1,3 @@
+data_root: data/raw/open
+runs_root: runs
+run_name: default

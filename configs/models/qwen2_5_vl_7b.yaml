@@ -1,0 +1,12 @@
+adapter: hf_local
+model_name: Qwen/Qwen2.5-VL-7B-Instruct
+snapshot_path: models/snapshots/Qwen2.5-VL-7B-Instruct
+revision: ""
+snapshot_hash: qwen2-5-vl-7b-local-snapshot
+local_files_only: true
+trust_remote_code: true
+device_map: auto
+torch_dtype: bfloat16
+max_new_tokens: 512
+do_sample: false
+model_class: AutoModelForImageTextToText

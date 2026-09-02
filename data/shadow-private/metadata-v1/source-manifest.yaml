@@ -1,0 +1,22 @@
+version: shadow-source-acquisition-v1
+sources:
+  - id: miap-boxes-train-v1
+    kind: miap_boxes
+    filename: miap-boxes-train.csv
+    url: https://storage.googleapis.com/openimages/open_images_extended_miap/open_images_extended_miap_boxes_train.csv
+  - id: open-images-train-attribution-2018-04
+    kind: openimages_attribution
+    filename: open-images-train-attribution.csv
+    url: https://storage.googleapis.com/openimages/2018_04/train/train-images-boxable-with-rotation.csv
+  - id: vsr-random-train-b2053328
+    kind: vsr
+    filename: vsr-random-train.jsonl
+    url: https://huggingface.co/datasets/cambridgeltl/vsr_random/resolve/b2053328fafdd018ff56cf1dfa9643caaa4e69b8/train.jsonl
+  - id: vsr-random-dev-b2053328
+    kind: vsr
+    filename: vsr-random-dev.jsonl
+    url: https://huggingface.co/datasets/cambridgeltl/vsr_random/resolve/b2053328fafdd018ff56cf1dfa9643caaa4e69b8/dev.jsonl
+  - id: vsr-random-test-b2053328
+    kind: vsr
+    filename: vsr-random-test.jsonl
+    url: https://huggingface.co/datasets/cambridgeltl/vsr_random/resolve/b2053328fafdd018ff56cf1dfa9643caaa4e69b8/test.jsonl

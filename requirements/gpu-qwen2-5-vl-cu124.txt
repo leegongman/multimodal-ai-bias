@@ -1,0 +1,16 @@
+# Install torch packages first from the PyTorch CUDA 12.4 index:
+# uv pip install --force-reinstall torch==2.6.0+cu124 torchvision==0.21.0+cu124 torchaudio==2.6.0+cu124 --index-url https://download.pytorch.org/whl/cu124
+#
+# Then install this file with --no-deps to avoid replacing the CUDA wheel set:
+# uv pip install --force-reinstall --no-deps -r requirements-gpu-qwen2-5-vl-cu124.txt
+
+transformers==4.51.0
+accelerate==1.6.0
+tokenizers==0.21.1
+huggingface-hub==0.30.2
+safetensors==0.5.3
+numpy==1.26.4
+Pillow==11.2.1
+sentencepiece
+qwen-vl-utils
+click

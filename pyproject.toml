@@ -1,0 +1,39 @@
+[project]
+name = "multimodal-bias"
+version = "0.1.0"
+description = "Offline multimodal image-text QA inference and evaluation pipeline"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "pillow>=11.0,<13",
+    "pyyaml>=6.0.3",
+    "typer>=0.26.7",
+]
+
+[project.scripts]
+multimodal-bias = "multimodal_bias.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.11.3,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.0",
+    "ruff>=0.15.17",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+src = ["src", "tests"]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

@@ -1,0 +1,12 @@
+vllm @ https://github.com/vllm-project/vllm/releases/download/v0.23.0/vllm-0.23.0%2Bcu129-cp38-abi3-manylinux_2_28_x86_64.whl
+torch==2.11.0+cu129
+torchvision==0.26.0+cu129
+torchaudio==2.11.0+cu129
+transformers==5.12.1
+openai==2.43.0
+PyYAML==6.0.3
+fastapi==0.116.1
+starlette==0.47.3
+prometheus-fastapi-instrumentator==7.1.0
+ninja==1.13.0
+

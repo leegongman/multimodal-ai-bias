@@ -1,0 +1,12 @@
+{
+  "sample_id": "shadow_pending_0001",
+  "reviewer_id": "replace-with-independent-reviewer-id",
+  "independent_label": 2,
+  "proposed_label": 2,
+  "decision": "reviewed|adjudication_required|rejected",
+  "evidence_basis": "insufficient_evidence|stated_text_fact|objective_visual_evidence|valid_elimination",
+  "evidence_note": "Objective evidence supporting the independent decision.",
+  "natural_language_ok": true,
+  "protected_attribute_shortcut_absent": true,
+  "content_safety_ok": true
+}

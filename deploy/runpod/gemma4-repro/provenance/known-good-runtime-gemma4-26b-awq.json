@@ -1,0 +1,50 @@
+{
+  "captured_at": "2026-06-20T16:49:25.281326+00:00",
+  "host": {
+    "os": "Ubuntu 24.04.3 LTS",
+    "gpu": "NVIDIA RTX A6000",
+    "gpu_memory_mib": 49140,
+    "driver": "550.127.08",
+    "python": "3.12"
+  },
+  "model": {
+    "id": "cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit",
+    "revision": "4033b16200f4152e55e100ea12dc388c537df622",
+    "quantization": "AWQ 4-bit compressed-tensors",
+    "vllm_moe_backend": "MARLIN WNA16"
+  },
+  "server": {
+    "vllm": "0.23.0+cu129",
+    "torch": "2.11.0+cu129",
+    "torch_cuda": "12.9",
+    "transformers": "5.12.1",
+    "openai": "2.43.0",
+    "fastapi": "0.116.1",
+    "starlette": "0.47.3",
+    "prometheus_fastapi_instrumentator": "7.1.0",
+    "ninja": "1.13.0",
+    "host": "127.0.0.1",
+    "port": 8000,
+    "tensor_parallel_size": 1,
+    "max_model_len": 32768,
+    "gpu_memory_utilization": 0.9,
+    "generation_config": "vllm"
+  },
+  "full_run": {
+    "run_id": "gemma4_26b_a4b_awq_v3_full_c32_01",
+    "elapsed_seconds": 2506.9618422575295,
+    "seconds_per_sample": 0.29493668732441525,
+    "sample_count": 8500,
+    "parse_valid_count": 8500,
+    "parse_invalid_count": 0,
+    "failure_count": 0,
+    "retry_count": 0,
+    "concurrency": 32,
+    "initial_max_tokens": 256,
+    "retry_max_tokens": 512,
+    "prompt_sha256": "87d694d0b968ccef4606a979f52c5de63454e870be71a6d9f4e91ef942067cb6",
+    "predictions_sha256": "09b81b6309c383dd5f0cea1f2579eb4cb93d152d6356d536a7f076c46e4add45",
+    "public_score": 0.9634,
+    "reported_public_rank": 83
+  }
+}
