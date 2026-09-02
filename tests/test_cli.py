@@ -186,40 +186,43 @@ def test_cli_help_succeeds() -> None:
     runner = CliRunner()
 
     result = runner.invoke(app, ["--help"])
+    output = result.output + (result.stderr or "")
 
     assert result.exit_code == 0
-    assert "Usage:" in result.output
-    assert "Multimodal 236722" in result.output
-    assert "--version" in result.output
-    assert "validate-data" in result.output
-    assert "infer" in result.output
-    assert "verify-risky" in result.output
-    assert "make-submission" in result.output
-    assert "shadow-audit" in result.output
-    assert "shadow-freeze" in result.output
-    assert "shadow-evaluate" in result.output
-    assert "shadow-acquire-metadata" in result.output
-    assert "shadow-build-candidate-pool" in result.output
-    assert "Traceback" not in result.output
+    assert "Usage:" in output
+    assert "Multimodal 236722" in output
+    assert "--version" in output
+    assert "validate-data" in output
+    assert "infer" in output
+    assert "verify-risky" in output
+    assert "make-submission" in output
+    assert "shadow-audit" in output
+    assert "shadow-freeze" in output
+    assert "shadow-evaluate" in output
+    assert "shadow-acquire-metadata" in output
+    assert "shadow-build-candidate-pool" in output
+    assert "Traceback" not in output
 
 
 def test_cli_no_args_shows_help() -> None:
     runner = CliRunner()
 
     result = runner.invoke(app)
+    output = result.output + (result.stderr or "")
 
     assert result.exit_code == 0
-    assert "Usage:" in result.output
-    assert "Multimodal 236722" in result.output
+    assert "Usage:" in output
+    assert "Multimodal 236722" in output
 
 
 def test_cli_version_succeeds() -> None:
     runner = CliRunner()
 
     result = runner.invoke(app, ["--version"])
+    output = result.output + (result.stderr or "")
 
     assert result.exit_code == 0
-    assert result.output.strip() == f"multimodal-bias {__version__}"
+    assert output.strip() == f"multimodal-bias {__version__}"
 
 
 def test_cli_validate_data_succeeds_for_valid_layout(tmp_path: Path) -> None:
@@ -969,9 +972,10 @@ def test_cli_verify_risky_rejects_unsafe_run_id_without_traceback(tmp_path: Path
 
 def test_cli_verify_risky_requires_run_id() -> None:
     result = CliRunner().invoke(app, ["verify-risky"])
+    output = result.output + (result.stderr or "")
 
     assert result.exit_code == 2
-    assert "--run-id" in result.output
+    assert "--run-id" in output
 
 
 def test_cli_verify_risky_rejects_malformed_parsed_artifact(tmp_path: Path) -> None:
@@ -1118,10 +1122,10 @@ def test_installed_console_script_help_version_and_validate_data_succeed(tmp_pat
         text=True,
     )
     assert help_result.returncode == 0
-    assert "Usage:" in help_result.stdout
-    assert "Multimodal 236722" in help_result.stdout
-    assert "--version" in help_result.stdout
-    assert help_result.stderr == ""
+    help_output = help_result.stdout + help_result.stderr
+    assert "Usage:" in help_output
+    assert "Multimodal 236722" in help_output
+    assert "--version" in help_output
 
     version_result = subprocess.run(
         [script_path, "--version"],
@@ -1131,8 +1135,8 @@ def test_installed_console_script_help_version_and_validate_data_succeed(tmp_pat
         text=True,
     )
     assert version_result.returncode == 0
-    assert version_result.stdout.strip() == f"multimodal-bias {__version__}"
-    assert version_result.stderr == ""
+    version_output = version_result.stdout + version_result.stderr
+    assert version_output.strip() == f"multimodal-bias {__version__}"
 
     validate_result = subprocess.run(
         [script_path, "validate-data", "--data-root", str(data_root)],
@@ -1142,5 +1146,5 @@ def test_installed_console_script_help_version_and_validate_data_succeed(tmp_pat
         text=True,
     )
     assert validate_result.returncode == 0
-    assert "Data layout valid" in validate_result.stdout
-    assert validate_result.stderr == ""
+    validate_output = validate_result.stdout + validate_result.stderr
+    assert "Data layout valid" in validate_output

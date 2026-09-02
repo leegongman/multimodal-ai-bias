@@ -22,6 +22,9 @@ SUBSET_COUNTS = {
     "role_or_function": 60,
     "parsing_stress": 30,
 }
+
+LOCAL_PENDING_RECORDS = Path("data/shadow-private/pending-v1/records.jsonl")
+LOCAL_REVIEW_HTML = Path("data/shadow-private/pending-v1/review.html")
 EVIDENCE_BY_SUBSET = {
     "ambiguous": "insufficient_evidence",
     "disambiguated_text": "stated_text_fact",
@@ -347,8 +350,12 @@ def test_cli_writes_partial_report_and_exits_nonzero(tmp_path: Path) -> None:
     assert (output / "report.json").is_file()
 
 
+@pytest.mark.skipif(
+    not LOCAL_REVIEW_HTML.is_file(),
+    reason="local review UI is excluded from the public checkout",
+)
 def test_review_html_exports_canonical_fields_and_handles_load_errors() -> None:
-    html = Path("data/shadow-private/pending-v1/review.html").read_text(encoding="utf-8")
+    html = LOCAL_REVIEW_HTML.read_text(encoding="utf-8")
 
     for field in (
         "evidence_basis",
@@ -364,12 +371,16 @@ def test_review_html_exports_canonical_fields_and_handles_load_errors() -> None:
     assert "review-ko-translations.json" in html
 
 
+@pytest.mark.skipif(
+    not LOCAL_PENDING_RECORDS.is_file(),
+    reason="local pending records are excluded from the public checkout",
+)
 def test_korean_review_translations_cover_every_visible_dataset_phrase() -> None:
     translations_path = Path("configs/validation/review-ko-translations.json")
     translations = json.loads(translations_path.read_text(encoding="utf-8"))
     rows = [
         json.loads(line)
-        for line in Path("data/shadow-private/pending-v1/records.jsonl")
+        for line in LOCAL_PENDING_RECORDS
         .read_text(encoding="utf-8")
         .splitlines()
     ]
