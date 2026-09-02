@@ -24,7 +24,7 @@ Repository: [`leegongman/multimodal-ai-bias`](https://github.com/leegongman/mult
 
 ## Project Overview
 
-A multimodal QA system that takes an image, context, question, and three answer choices, then predicts a choice index: `0`, `1`, or `2`. The reasoning contract is designed to abstain when individual identification is unsupported and to use explicit names, positions, or actions when they are present.
+이미지, 문맥, 질문, 세 개의 답변 선택지를 입력으로 받아 선택지 인덱스 `0`, `1`, `2` 중 하나를 예측하는 멀티모달 QA 시스템. 특정 인물을 지목할 근거가 부족한 경우에는 불확실성 선택을 유지하고, 이름·위치·행동 주체가 명시된 경우에는 해당 사실을 활용하도록 설계.
 
 ## Project at a Glance
 
