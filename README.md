@@ -1,82 +1,84 @@
 # Multimodal AI Bias
 
-이미지와 텍스트를 함께 읽고, 명시된 근거와 객관적인 시각 정보만으로 답을 선택하는 오프라인 VLM 추론·검증 파이프라인
+An offline VLM inference and validation pipeline that reads images and text together, then selects an answer using explicit evidence and observable visual information.
 
-이 저장소는 단순한 모델 실행 코드가 아니라 데이터 구조 검증, Reasoner 추론, raw 응답 보존, 구조화 파싱, 조건부 Verifier, 결과 CSV 검증까지 하나로 묶은 실험·재현 시스템.
+This repository goes beyond a single model runner. It combines dataset validation, Reasoner inference, raw-output preservation, structured parsing, conditional verification, and final CSV validation into one reproducible system.
 
 ```text
-이미지·문맥·질문·선택지
-        ↓
-데이터 구조 검증
-        ↓
-VLM Reasoner 추론
-        ↓
-raw 응답 보존·구조화 파싱
-        ↓
-조건부 Verifier·최종 라벨 검증
-        ↓
-sample_id,label 결과 생성
+Image · context · question · choices
+                ↓
+Dataset contract validation
+                ↓
+VLM Reasoner inference
+                ↓
+Raw output preservation · structured parsing
+                ↓
+Conditional Verifier · label validation
+                ↓
+sample_id,label generation
 ```
 
-핵심 목표는 이미지 속 인물의 인종·성별·외모·표정·역할만으로 능력이나 행동을 추정하지 않으면서, 이름·위치·행동·문맥에 명시된 사실은 놓치지 않는 추론 경계의 구현.
+The central objective is to avoid inferring ability or behavior from race, gender, appearance, expression, or social role alone, while still using explicit facts such as names, positions, actions, and relationships.
 
-저장소: `leegongman/multimodal-ai-bias`
+Repository: [`leegongman/multimodal-ai-bias`](https://github.com/leegongman/multimodal-ai-bias)
 
-## 프로젝트 개요
+## Project Overview
 
-이미지, 문맥, 질문, 세 개 선택지를 입력으로 받아 선택지 인덱스 `0`, `1`, `2`를 예측하는 멀티모달 QA 시스템. 모호한 문항에서는 근거 없는 개인 지목을 보류하고, 이름·위치·행동 주체가 명시된 문항에서는 해당 사실을 사용하도록 설계.
+A multimodal QA system that takes an image, context, question, and three answer choices, then predicts a choice index: `0`, `1`, or `2`. The reasoning contract is designed to abstain when individual identification is unsupported and to use explicit names, positions, or actions when they are present.
 
-## 프로젝트 한눈에 보기
+## Project at a Glance
 
-| 항목 | 내용 |
+| Area | Details |
 |---|---|
-| 문제 유형 | 이미지·텍스트 기반 3지선다 질문 응답 |
-| 입력 | 이미지, 문맥, 질문, 세 개 선택지 |
-| 출력 | `sample_id,label` 형식의 라벨 `0`, `1`, `2` |
-| 공식 입력 규모 | 기록 기준 test 8,500행 |
-| 로컬 검증셋 | v2 188문항, v3 188문항 |
-| 핵심 기준 모델 | `Qwen/Qwen3.5-9B` |
-| 주요 추론 구조 | Reasoner 단일 패스 및 Reasoner + Verifier 2-pass |
-| 실행 환경 | Python 3.10, uv, CUDA GPU, vLLM 원격 번들 |
-| 품질 관리 | 472개 오프라인 테스트, Ruff, 데이터·출력 계약 검증 |
+| Task | Image-text multiple-choice QA |
+| Input | Image, context, question, and three choices |
+| Output | `sample_id,label` with labels `0`, `1`, or `2` |
+| Full input scale | 8,500 test rows in the recorded input |
+| Local validation | 188 samples in v2 and 188 samples in v3 |
+| Primary baseline | `Qwen/Qwen3.5-9B` |
+| Inference designs | Single-pass Reasoner and Reasoner + Verifier 2-pass |
+| Runtime | Python 3.10, uv, CUDA GPU, and vLLM bundles |
+| Quality gates | 472 offline tests, Ruff, data and output contracts |
 
-## 주요 기능
+## Key Features
 
-- 로컬 이미지·텍스트 입력 처리
-- VLM 어댑터 및 모델 설정 관리
-- Reasoner·Verifier 프롬프트 관리
-- 구조화 응답 파싱 및 라벨 검증
-- 실험 결과 비교 및 재현성 기록
-- 공개 가능한 고득점 접근 분석
+- Image-text sample loading and data-layout validation
+- Typed VLM adapters and model configuration management
+- Versioned Reasoner and Verifier prompt templates
+- Raw response preservation and structured answer parsing
+- Label, row-order, schema, and submission validation
+- Reproducible run metadata, hashes, and experiment comparison
+- Conditional verification for high-risk reasoning cases
+- Reference analysis of strong public approaches
 
-## 무엇을 하는 프로젝트인가
+## What This Project Does
 
-### 멀티모달 입력 해석
+### Multimodal Evidence Grounding
 
-각 행의 이미지와 텍스트 문맥을 함께 읽는 구조. 텍스트만 보고 답하거나 이미지 속 외형만 보고 답하지 않고, 질문이 요구하는 근거의 종류를 먼저 분리하는 방식.
+Each sample is processed with both its image and textual context. The system separates visual evidence, explicit textual evidence, and unsupported assumptions before accepting a candidate label.
 
-### 편향 민감 추론
+### Bias-Aware Reasoning
 
-문항은 다음 두 능력을 동시에 요구하는 구조.
+The task requires two capabilities at the same time:
 
-- **모호한 상황의 보류**: 그룹 정체성, 보호속성, 직업적 역할, 표정만으로 특정 인물을 지목할 수 없는 경우 불확실성 선택
-- **명시된 사실의 사용**: 이름, 위치, 행동 주체, 문맥상 명시된 관계가 있는 경우 해당 인물 선택
+- **Abstain under ambiguity**: do not identify an individual from group identity, protected attributes, occupational stereotypes, or facial expression alone
+- **Use explicit facts**: select the relevant individual when a name, position, action, or relationship is explicitly stated
 
-따라서 “항상 사람을 고르는 모델”과 “항상 불확실성을 고르는 모델” 모두 위험. 이미지 근거와 문장 근거의 충돌을 확인하는 판단 경계가 핵심.
+Always choosing a person and always choosing the uncertainty option are both failure modes. The core challenge is maintaining a reliable boundary between evidence-based identification and unsupported inference.
 
-### Reasoner·Verifier 분리
+### Reasoner–Verifier Separation
 
-1차 Reasoner는 모든 입력에 대해 근거와 후보 라벨을 생성. 위험 신호가 있는 행만 Verifier가 재검토. 최종 단계에서 파싱 가능한 라벨인지, 선택지 인덱스가 유효한지, 실행 산출물의 순서와 개수가 맞는지 검증.
+The Reasoner produces a first-pass rationale and candidate label for every row. The Verifier revisits only rows with risk signals, such as an unsupported individual selection or an unnecessary uncertainty answer. The final stage validates parseability, label range, row count, and output order.
 
-### 실행 이력 보존
+### Reproducible Experiment Tracking
 
-프롬프트 버전, 모델 설정, raw 모델 응답, 파싱 결과, 실행 메타데이터, 해시와 결과 파일을 실행 단위로 보존하는 구조. 단일 점수보다 “어떤 모델·프롬프트·파서·환경에서 어떤 결과가 나왔는가”의 추적성 중시.
+Prompt versions, model settings, raw generations, parsed outputs, runtime metadata, hashes, and result files are tracked per run. The project emphasizes traceability: which model, prompt, parser, and runtime produced each result.
 
-## 데이터 구성과 특성
+## Dataset Overview and Characteristics
 
-### 원본 입력 구조
+### Raw Input Layout
 
-원본 평가 자료는 저장소에 직접 포함하지 않고 로컬에서 별도 배치하는 방식. 기본 레이아웃은 다음 구조.
+The raw input is placed locally rather than committed to the repository. The expected layout is:
 
 ```text
 data/raw/open/
@@ -89,165 +91,138 @@ data/raw/open/
 └── sample_submission.csv
 ```
 
-test CSV의 기본 필드.
+The core test CSV fields are:
 
 ```text
 sample_id,image_path,context,question,answers
 ```
 
-각 행에는 이미지 경로, 이미지와 상황을 설명하는 문맥, 질문, 세 개의 답변 선택지가 포함. 출력 라벨은 선택지의 위치인 `0`·`1`·`2`이며, 불확실성 선택지가 항상 같은 숫자라는 가정 금지.
+Each row contains an image path, contextual description, question, and three answer choices. Output labels are choice positions `0`, `1`, and `2`; the uncertainty choice is intentionally not assumed to have a fixed numeric position.
 
-기록상 전체 test 입력은 8,500행. test에는 정답 라벨이 포함되지 않으므로 저장소에서 샘플별 공식 정오를 주장하지 않으며, 공개 저장소에는 원본 이미지·대용량 CSV를 업로드하지 않는 정책.
+The recorded test input contains 8,500 rows. Test labels are not included in the input, so this repository does not claim sample-level ground truth accuracy. Original images and large CSV files are kept outside the public repository.
 
-### 실제 문항에서 관찰된 패턴
+### Observed Data Patterns
 
-분석 기록상 모델이 가장 자주 부딪힌 난점은 시각 인식 자체보다 “어떤 근거를 사용해도 되는가”의 판단.
+The main difficulty identified in the experiments was not visual recognition alone, but deciding which evidence is valid for identifying a person.
 
-- 보호속성 단어가 등장하지만 특정 개인을 지목할 근거가 없는 문장
-- 성별이나 직업적 역할을 행동 주체와 혼동하기 쉬운 문장
-- 표정·자세·복장만으로 감정이나 의도를 과도하게 추정하기 쉬운 문장
-- 이름·위치·행동 주체가 명시되어 있어 실제로는 특정 인물을 선택해야 하는 문장
-- 여러 문장이 결합되어 단순 키워드보다 문맥 연결이 필요한 문장
-- 이미지와 텍스트 중 어느 쪽이 결정적 근거인지 구분해야 하는 문장
+- Protected-attribute language without sufficient evidence for individual identification
+- Gender or occupational-role cues that can be mistaken for the actor of an event
+- Facial expression, posture, or clothing that invites unsupported intent inference
+- Explicit names, positions, or actions that require selecting a specific person
+- Multi-sentence context that cannot be solved reliably with keyword matching
+- Samples where the decisive evidence is visual in one row and textual in another
 
-기준 모델 분석에서 불확실성 선택 비율이 58.6%까지 나타났으며, 기준 모델·v3.1·2-pass 예측이 8,089행, 약 95%에서 일치. 이는 문항 상당수가 무작정 모델을 바꾸는 문제보다 동일한 판단 경계를 안정적으로 유지하는 문제임을 보여주는 분석 자료.
+The baseline selected the uncertainty option in 58.6% of the recorded predictions. The baseline, v3.1, and 2-pass systems agreed on 8,089 rows, approximately 95% of the full input. This suggests that maintaining a stable reasoning boundary is at least as important as switching models.
 
-### 로컬 검증셋
+### Local Validation Sets
 
-공개 원본 라벨을 대신하는 자료가 아니라 모델과 프롬프트 변경을 비교하기 위한 내부 검증셋. 원본 이미지 픽셀과 대용량 자료는 별도 로컬 영역 관리.
+These are internal validation sets for comparing model and prompt changes, not replacements for the original labels. Image pixels and large source artifacts are kept in a separate local area.
 
-| 버전 | 규모 | 구성 | 목적 |
+| Version | Size | Composition | Purpose |
 |---|---:|---|---|
-| v2 | 188문항 | 모호 90, 명시 사실 98 | 기본 추론 경계와 라벨 매핑 확인 |
-| v3 | 188문항 | 모호 90, 명시 사실 98 | 안내 문구를 줄이고 실제 문장 난이도에 가깝게 조정 |
+| v2 | 188 samples | 90 ambiguous, 98 explicit-fact | Basic reasoning boundary and label-mapping checks |
+| v3 | 188 samples | 90 ambiguous, 98 explicit-fact | Harder wording with less explanatory guidance |
 
-v2·v3의 세부 서브셋.
+The v2 and v3 subsets are:
 
-| 서브셋 | 수량 | 확인 내용 |
+| Subset | Count | What it tests |
 |---|---:|---|
-| `ambiguous_protected` | 50 | 보호속성만으로 개인을 지목하는 오류 방지 |
-| `ambiguous_gender_role` | 20 | 성별·역할 고정관념에 의한 과추론 방지 |
-| `ambiguous_expression` | 20 | 표정·자세 기반 의도 추정 방지 |
-| `disambiguated_named` | 48 | 이름과 행동 주체의 연결 |
-| `disambiguated_position` | 32 | 위치와 소거 추론 |
-| `disambiguated_protected` | 18 | 보호속성이 있어도 명시 사실을 사용하는지 확인 |
+| `ambiguous_protected` | 50 | Avoiding identity claims from protected attributes alone |
+| `ambiguous_gender_role` | 20 | Avoiding gender and role stereotypes |
+| `ambiguous_expression` | 20 | Avoiding intent inference from expression or posture |
+| `disambiguated_named` | 48 | Connecting names to the described action |
+| `disambiguated_position` | 32 | Position-based grounding and elimination |
+| `disambiguated_protected` | 18 | Using explicit facts even when protected attributes appear |
 
-핵심 측정값은 전체 평균 하나가 아니라 `Acc_ambiguous`, `Acc_disambiguated`, 서브셋별 정확도, 라벨 분포, 파싱 실패율, 실행 시간의 동시 비교.
+The evaluation view is not a single aggregate score. It compares `Acc_ambiguous`, `Acc_disambiguated`, subset accuracy, label distribution, parsing-failure rate, and runtime together.
 
-## 사용 모델과 실험 결과
+## Models and Experiment Results
 
-| 모델 | 사용 목적 | 확인된 결과와 현재 판단 |
+| Model | Usage | Recorded result and assessment |
 |---|---|---|
-| `Qwen/Qwen3.5-9B` | 주력 Reasoner 기준선, v3.1, 2-pass | 기록 점수 약 `0.99608`~`0.99617`. 현재 가장 중요한 기준선 |
-| `Qwen/Qwen2.5-VL-7B-Instruct` | 초기 로컬 VLM 및 vLLM 후보 | 로컬 모델 다운로드·일부 생성 확인. HF 순차 실행은 느렸고 vLLM 호환성 보완 필요 |
-| `openbmb/MiniCPM-V-4_5` | 초기 VLM 후보 | 실제 이미지 smoke test 성공. 전체 실행은 처리 속도 문제로 보류 |
-| `Qwen2.5-VL-32B-AWQ` | 대형 양자화 후보 비교 | 기록 점수 `0.98983`. 9B 기준선보다 낮아 주력 경로 제외 |
-| `Qwen3.6-35B` | 대형 모델 비교 | 기록 점수 `0.9695`. 모델 크기만으로 개선되지 않음을 확인 |
-| `Gemma4-26B` | 다른 계열 비교 | 기록 점수 `0.99175`. 기준선 미달 |
-| `InternVL3-14B` | 시각 grounding 후보 | 검증셋 명시 사실 구간 하락, 약 `1.41초/sample`로 속도 조건도 불리 |
+| [`Qwen/Qwen3.5-9B`](https://huggingface.co/Qwen/Qwen3.5-9B) | Primary Reasoner baseline, v3.1, and 2-pass | Recorded score around `0.99608`–`0.99617`; primary reference |
+| [`Qwen/Qwen2.5-VL-7B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct) | Initial local VLM and vLLM candidate | Local download and partial generation confirmed; sequential HF path was slow and required vLLM compatibility work |
+| [`openbmb/MiniCPM-V-4_5`](https://huggingface.co/openbmb/MiniCPM-V-4_5) | Initial VLM candidate | Real-image smoke test succeeded; full run deferred because of throughput |
+| [`Qwen/Qwen2.5-VL-32B-Instruct-AWQ`](https://huggingface.co/Qwen/Qwen2.5-VL-32B-Instruct-AWQ) | Large quantized comparison candidate | Recorded score `0.98983`; below the 9B baseline |
+| [`cyankiwi/Qwen3.5-35B-A3B-AWQ-4bit`](https://huggingface.co/cyankiwi/Qwen3.5-35B-A3B-AWQ-4bit) | 35B AWQ comparison experiment, recorded as the Qwen 35B run | Recorded score `0.9695`; model size alone did not improve results |
+| [`cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit`](https://huggingface.co/cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit) | Cross-family comparison | Recorded score `0.99175`; below the primary baseline |
+| [`OpenGVLab/InternVL3-14B`](https://huggingface.co/OpenGVLab/InternVL3-14B) | Visual-grounding candidate | Explicit-fact subset dropped; approximately `1.41 sec/sample` |
 
-`LLaVA-OneVision`, `Qwen3.6-27B`, `Qwen3.5-9B` 관련 상위 접근은 `references/high-score/`에 비교용으로 분리. 외부 코드를 프로젝트 코드에 그대로 복사하지 않고, 모델·프롬프트·파서·처리량·점수·재현성 기준으로 분석하는 방식.
+[`LLaVA-OneVision`](https://huggingface.co/llava-hf/llava-onevision-qwen2-7b-ov-chat-hf), [`Qwen3.6-27B`](https://huggingface.co/Qwen/Qwen3.6-27B), and Qwen3.5-9B strong approaches are kept separately in `references/high-score/` for comparison. External implementations are analyzed by model, prompt, parser, throughput, score, and reproducibility rather than copied directly into the core pipeline.
 
-### 실험에서 얻은 결론
+### Key Findings from the Experiments
 
-- 더 큰 모델이 자동으로 더 좋은 결과를 만들지 않는 현상. 이 문제에서는 모호한 문항에서 불확실성을 유지하면서 명시 사실만 선택하는 판단 경계가 더 중요.
-- 단순하고 안정적인 Reasoner 프롬프트가 복잡한 규칙 나열보다 유리한 경향. 광범위한 규칙 확장안은 기준선보다 낮은 기록.
-- JSON 스키마를 과도하게 강제한 실험에서 8,500행 중 391행만 파싱된 기록. 출력 형식 복잡화가 추론 품질과 파싱 안정성을 동시에 훼손할 수 있음을 확인.
-- 2-pass Verifier는 로컬 검증셋에서 위험 구간 개선 가능성을 보였지만, 전체 기록 점수는 단일 v3.1과 동일한 `0.99617`에 머문 결과.
-- HF 순차 추론은 전체 입력 처리에 비효율적. A6000 48GB 환경에서 vLLM 기반 배치·서버 실행이 필요한 구조.
+- Larger models did not automatically produce better results. The critical capability was preserving uncertainty on ambiguous samples while using explicit facts on resolvable samples.
+- A compact and stable Reasoner prompt was more reliable than a prompt with a large number of global rules.
+- An over-constrained JSON-only experiment parsed only 391 of 8,500 rows, showing how output complexity can damage both generation quality and parser reliability.
+- The 2-pass Verifier improved selected regions of the local validation set, but the recorded full-input score remained the same as the single-pass v3.1 result at `0.99617`.
+- Sequential HF inference was inefficient for the full input. The A6000 48GB runtime required a vLLM server or batched execution path.
 
-## 추론 파이프라인
+## Inference Pipeline
 
 ```text
 CSV + image files
         │
-        ├─ validate-data: 경로·필드·이미지·행 수 검증
+        ├─ validate-data: path · field · image · row-count checks
         │
-        ├─ SampleRecord: 이미지·문맥·질문·선택지 정규화
+        ├─ SampleRecord: normalize image · context · question · choices
         │
-        ├─ Reasoner: 근거 중심 1차 응답 생성
-        │       └─ raw_reasoner.jsonl 보존
+        ├─ Reasoner: evidence-grounded first-pass generation
+        │       └─ preserve raw_reasoner.jsonl
         │
-        ├─ Parser: 모델 응답에서 라벨·근거·상태 추출
+        ├─ Parser: extract label · evidence · status from model output
         │
-        ├─ Verifier: 위험 신호 행만 조건부 재검토
+        ├─ Verifier: conditionally review high-risk rows
         │
-        ├─ Arbitration: 최종 라벨과 검증 결과 결합
+        ├─ Arbitration: combine reasoning and verification results
         │
-        └─ Submission validator: 행 수·순서·라벨·CSV 스키마 확인
+        └─ Submission validator: check row count · order · labels · CSV schema
 ```
 
-### 라벨 계약
+### Output Contract
 
-- 최종 라벨은 반드시 `0`, `1`, `2` 중 하나
-- 라벨은 선택지 인덱스이며 불확실성의 고정 번호가 아님
-- 불확실성 판단도 모델의 생성 결과와 선택지 내용에 근거
-- 규칙 기반 조건문으로 최종 라벨을 직접 덮어쓰지 않는 원칙
-- raw 응답, 파싱 실패, fallback, 검증 전환 이력의 보존
+- The final label must be one of `0`, `1`, or `2`.
+- A label is a choice index; the uncertainty option has no fixed numeric value.
+- Uncertainty decisions are based on the model output and the answer-choice content.
+- Rule-based conditionals do not directly overwrite the model's final label.
+- Raw responses, parsing failures, fallbacks, and verification transitions are preserved.
 
-## 저장소 구조
+## Repository Layout
 
 ```text
-src/                 핵심 Python 패키지
-scripts/             실행·검증 스크립트
-configs/             모델·프롬프트·검증 설정
-tests/               단위·계약 테스트
-data/                데이터 준비 문서 및 비공개 로컬 영역
-experiments/         실험·파이프라인·검증 자료
-deploy/              원격 실행 재현 번들
-docs/                프로젝트 문서·사양·이력
-references/          외부 공개 자료 분석
+src/                 Core Python package
+scripts/             Inference and validation entry points
+configs/             Model, prompt, and validation configuration
+tests/               Unit, contract, and regression tests
+data/                Data contracts and local input areas
+experiments/         Experiment pipelines and analysis
+deploy/              Remote GPU reproduction bundles
+docs/                Design notes and project history
+references/          External approach comparison
 ```
 
-## 빠른 시작
+## Quick Start
 
-### 설치
+### Installation
 
 ```bash
 uv sync
 ```
 
-### 테스트
+### Test the Pipeline
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 uv run pytest -q
 ```
 
-### 입력 데이터 검증
+### Validate Local Input Data
 
 ```bash
 uv run multimodal-bias validate-data --data-root data/raw/open
 ```
 
-공식 평가 자료는 별도 취득 및 로컬 배치 대상
-모델 가중치와 대용량 산출물은 외부 보관 대상
-GitHub 공개 범위는 [데이터 공개 정책](docs/data-policy.md) 기준
+The original input must be obtained separately and placed under `data/raw/open/`. Model weights and large run artifacts are stored externally. The repository layout and local-data rules are described in the source tree.
 
-## 문서
+## License
 
-- [문서 인덱스](docs/README.md)
-- [프로젝트 개요](docs/project-overview.md)
-- [프로젝트 규칙](docs/project-rules.md)
-- [저장소 구조](docs/repository-layout.md)
-- [대화 기록 인덱스](docs/conversations.md)
-- [통합 결정사항](docs/decisions.md)
-- [데이터 공개 정책](docs/data-policy.md)
-- [공개 전 체크리스트](docs/release-checklist.md)
-- [참고 자료](references/high-score/README.md)
-
-## 현재 상태
-
-- 핵심 Python 패키지: 구현 완료
-- 오프라인 테스트: 통과 상태
-- GPU 실행: 환경별 재현 절차 별도 기록
-- 공개 저장소: 민감·대용량 자료 제외 상태
-
-## 기여 및 보안
-
-- [기여 가이드](CONTRIBUTING.md)
-- [보안 정책](SECURITY.md)
-
-## 라이선스
-
-라이선스 확정 전 상태
-포함된 외부 모델·데이터의 라이선스는 각 출처 기준
+The project license is not finalized. License and redistribution terms for each external model, dataset, and reference implementation must be checked at the source.
