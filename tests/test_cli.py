@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -14,6 +15,11 @@ from multimodal_bias.exceptions import ModelLoadError, ParseError
 from multimodal_bias.parsing import PARSED_REASONER_FIELDNAMES
 
 PNG_BYTES = b"\x89PNG\r\n\x1a\nminimal-png"
+ANSI_ESCAPE = re.compile(r"\x1b(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+
+
+def _clean_cli_output(output: str) -> str:
+    return ANSI_ESCAPE.sub("", output)
 
 
 def _write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, str]]) -> None:
@@ -186,7 +192,7 @@ def test_cli_help_succeeds() -> None:
     runner = CliRunner()
 
     result = runner.invoke(app, ["--help"])
-    output = result.output + (result.stderr or "")
+    output = _clean_cli_output(result.output + (result.stderr or ""))
 
     assert result.exit_code == 0
     assert "Usage:" in output
@@ -208,7 +214,7 @@ def test_cli_no_args_shows_help() -> None:
     runner = CliRunner()
 
     result = runner.invoke(app)
-    output = result.output + (result.stderr or "")
+    output = _clean_cli_output(result.output + (result.stderr or ""))
 
     assert result.exit_code == 0
     assert "Usage:" in output
@@ -219,7 +225,7 @@ def test_cli_version_succeeds() -> None:
     runner = CliRunner()
 
     result = runner.invoke(app, ["--version"])
-    output = result.output + (result.stderr or "")
+    output = _clean_cli_output(result.output + (result.stderr or ""))
 
     assert result.exit_code == 0
     assert output.strip() == f"multimodal-bias {__version__}"
@@ -972,7 +978,7 @@ def test_cli_verify_risky_rejects_unsafe_run_id_without_traceback(tmp_path: Path
 
 def test_cli_verify_risky_requires_run_id() -> None:
     result = CliRunner().invoke(app, ["verify-risky"])
-    output = result.output + (result.stderr or "")
+    output = _clean_cli_output(result.output + (result.stderr or ""))
 
     assert result.exit_code == 2
     assert "--run-id" in output
@@ -1122,7 +1128,7 @@ def test_installed_console_script_help_version_and_validate_data_succeed(tmp_pat
         text=True,
     )
     assert help_result.returncode == 0
-    help_output = help_result.stdout + help_result.stderr
+    help_output = _clean_cli_output(help_result.stdout + help_result.stderr)
     assert "Usage:" in help_output
     assert "Multimodal 236722" in help_output
     assert "--version" in help_output
@@ -1135,7 +1141,7 @@ def test_installed_console_script_help_version_and_validate_data_succeed(tmp_pat
         text=True,
     )
     assert version_result.returncode == 0
-    version_output = version_result.stdout + version_result.stderr
+    version_output = _clean_cli_output(version_result.stdout + version_result.stderr)
     assert version_output.strip() == f"multimodal-bias {__version__}"
 
     validate_result = subprocess.run(
@@ -1146,5 +1152,5 @@ def test_installed_console_script_help_version_and_validate_data_succeed(tmp_pat
         text=True,
     )
     assert validate_result.returncode == 0
-    validate_output = validate_result.stdout + validate_result.stderr
+    validate_output = _clean_cli_output(validate_result.stdout + validate_result.stderr)
     assert "Data layout valid" in validate_output
