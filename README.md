@@ -1,5 +1,7 @@
 # Multimodal AI Bias
 
+![Multimodal AI Bias overview](assets/multimodal-ai-bias-overview.jpeg)
+
 이미지와 텍스트를 함께 읽고, 명시된 근거와 관찰 가능한 시각 정보를 바탕으로 답을 선택하는 오프라인 VLM 추론·검증 파이프라인.
 
 단일 모델 실행기를 넘어 데이터 검증, Reasoner 추론, raw output 보존, 구조화 파싱, 조건부 검증, 최종 CSV 검증까지 하나의 재현 가능한 시스템으로 통합.
